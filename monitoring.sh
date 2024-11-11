@@ -9,23 +9,25 @@ LVM_USE=$(lsblk | grep "lvm" | wc -l | awk '{printf("%s", $1 > 0 ? "yes": "no")}
 CONNECTION_TCP=$(ss -ta | grep ESTAB | wc -l | awk '{printf("%d ESTABLISHED", $1)}')
 USER_LOG=$(users | wc -w)
 CONNECTIONS=$(ip a show | grep ": <" | cut -d : -f2)
-SUDO=$(cat /var/log/sudo/history.log | grep "COMMAND" | wc -l)
+SUDO=$(cat /var/log/sudo/sudo.log | grep "COMMAND" | wc -l)
 
-echo "#Architecture: $ARCHITECTURE";
-echo "#CPU physical: $CPU_PHYSICAL";
-echo "#vCPU: $CPU_VIRTUAL";
-echo "#Memory Usage: $MEMORY_USAGE";
-echo "#Disk Usage: $DISK_USAGE";
-echo "#CPU load: $CPU_LOAD";
-echo "#Last boot: $LAST_BOOT";
-echo "#LVM use: $LVM_USE";
-echo "#Connections TCP: $CONNECTION_TCP";
-echo "#User log: $USER_LOG";
-for CONNECTION in $CONNECTIONS; do
-    IP=$(ip a show $CONNECTION | grep "inet " | awk '{print $2}' | cut -d / -f1)
-    MAC=$(ip a show $CONNECTION | grep "link/ether" | awk '{print $2}')
-    if [[ $IP && $MAC ]]; then
-        echo "#Network: IP $IP ($MAC)";
-    fi
-done
-echo "#Sudo: $SUDO";
+(
+    echo -e "\t#Architecture: $ARCHITECTURE";
+    echo -e "\t#CPU physical: $CPU_PHYSICAL";
+    echo -e "\t#vCPU: $CPU_VIRTUAL";
+    echo -e "\t#Memory Usage: $MEMORY_USAGE";
+    echo -e "\t#Disk Usage: $DISK_USAGE";
+    echo -e "\t#CPU load: $CPU_LOAD";
+    echo -e "\t#Last boot: $LAST_BOOT";
+    echo -e "\t#LVM use: $LVM_USE";
+    echo -e "\t#Connections TCP: $CONNECTION_TCP";
+    echo -e "\t#User log: $USER_LOG";
+    for CONNECTION in $CONNECTIONS; do
+        IP=$(ip a show $CONNECTION | grep "inet " | awk '{print $2}' | cut -d / -f1)
+        MAC=$(ip a show $CONNECTION | grep "link/ether" | awk '{print $2}')
+        if [[ $IP && $MAC ]]; then
+            echo -e "\t#Network: IP $IP ($MAC)";
+        fi
+    done
+    echo -ne "\t#Sudo: $SUDO";
+) | wall

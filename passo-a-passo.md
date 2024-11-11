@@ -6,7 +6,7 @@
 
 - dnf (DNF é o gerenciador de pacotes de algumas distros do Linux como a Rocky).
 
-- dnf install openssh-server openssh-client openssh (Instalando os pacotes "openssh, -server, -client).
+- dnf install openssh-server openssh-clients openssh (Instalando os pacotes "openssh, -server, -clients).
 
 - service sshd start (Inicia o serviço do SSH mas já estava iniciado).
 
